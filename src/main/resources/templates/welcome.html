@@ -1,39 +1,109 @@
-<!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Homework</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <!-- <script src="getRequest.js"></script> -->
 
-    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <script>
+        $( document ).ready(function() {
 
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+            // GET REQUEST
+            $("#firstForm").submit(function(event){
+                event.preventDefault();
+                ajaxPost();
+            });
 
+
+
+            // DO POST
+            function ajaxPost(){
+                var data =$("#data").val();
+                var userName =$("#username").val();
+                var formData = {metaData:data,userName:userName};
+                $.ajax({
+                    type : "POST",
+                    contentType : 'application/json',
+                    url : "http://localhost:8080/users" ,
+                    dataType : 'json',
+                    data : JSON.stringify(formData),
+                    success: function(result){
+                        $("#divResult").text("Your have entered: " + JSON.stringify(result));
+                    },
+                    error : function(e) {
+                        console.log("ERROR: ", e);
+                    }
+                });
+            }
+        })
+    </script>
 </head>
 
+
+<script>
+    $( document ).ready(function() {
+
+        // GET REQUEST
+        $("#secondForm").submit(function(event){
+            event.preventDefault();
+            ajaxPost();
+        });
+
+
+
+        // DO POST
+        function ajaxPost(){
+            var userName =$("#user").val();
+            $.ajax({
+                type : "GET",
+                contentType : 'application/json',
+                url : "http://localhost:8080/" + userName ,
+                success: function(result){
+                    $("#divResultGet").text("The user has entered all these data: " + JSON.stringify(result));
+                },
+                error : function(e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+    })
+</script>
+</head>
 <body>
+<div class="container">
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">LoyaltyOne Homework</a>
-</nav>
+    <h3 style="color:blue">Users </h3>
 
-<main role="main" class="container">
-
-    <div class="starter-template">
-        <h1>Spring Boot Web Thymeleaf Example</h1>
-        <h2>
-            <span th:text="'Hello, ' + ${message}"></span>
-        </h2>
-        User name:<br>
-        <input type="text" name="User Name" value="Enter your name">
-        <input type="submit" value="Done">
-        <br>
+    <div>
+        <form class="form-inline" style="margin:20px 20px 20px 20px" id="firstForm">
+            <div class="form-group">
+                <label for="username" style="margin-right:5px">Username:</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter your username"/>
+                <label for="data" style="margin-right:5px">Data:</label>
+                <input type="text" class="form-control" id="data" placeholder="Enter a text"/>
+            </div>
+            <button type="submit" class="btn btn-default" style="margin-left:20px; margin-right:5px">Submit</button>
+            <div id="divResult">
+            </div>
+        </form>
     </div>
 
-
-</main>
-<!-- /.container -->
-
-<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+    <h3 style="color:blue">Users Submission</h3>
+    <div>
+        <form class="form-inline" style="...." id="secondForm">
+            <div class="form-group">
+                <label for="user" style="margin-right:5px">Username:</label>
+                <input type="text" class="form-control" id="user" placeholder="Enter your username to get all the submission"/>
+            </div>
+            <button type="submit" class="btn btn-default" style="margin-left:20px; margin-right:5px">Submit</button>
+            <div id="divResultGet">
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
+
