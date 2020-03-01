@@ -13,9 +13,9 @@ class User {
     @get:GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
     @get:Column(name = "username", nullable = false)
-    var userName: String? = null
+    lateinit var userName: String
     @get:Column(name = "metadata", nullable = false)
-    var metaData: String? = null
+    lateinit var metaData: String
     @get:Column(name = "date_time", nullable = false)
     var dateTime: LocalDateTime = LocalDateTime.now()
 

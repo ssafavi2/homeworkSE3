@@ -81,8 +81,16 @@
                 success: function(result){
                     $("#divResultGet").text("The user has entered all these data: " + JSON.stringify(result));
                 },
-                error : function(e) {
-                    console.log("ERROR: ", e);
+                error : function(xhr) {
+                    var responseText;
+                    $("#divResultGet").html("");
+                    try {
+                        responseText = jQuery.parseJSON(xhr.responseText);
+                        $("#divResultGet").append("<div><u>Message</u>:<br /><br />" + responseText.message + "</div>");
+                    } catch (e) {
+                        responseText = xhr.responseText;
+                        $("#divResultGet").html(responseText);
+                    }
                 }
             });
         }
@@ -104,6 +112,7 @@
             </div>
             <button type="submit" class="btn btn-default" style="margin-left:20px; margin-right:5px">Submit</button>
             <div id="divResult">
+                div result
             </div>
         </form>
     </div>
@@ -117,6 +126,7 @@
             </div>
             <button type="submit" class="btn btn-default" style="margin-left:20px; margin-right:5px">Submit</button>
             <div id="divResultGet">
+                divResultGet
             </div>
         </form>
     </div>

@@ -1,6 +1,7 @@
 package myweb.controller
 
 import com.loyaltyone.myweb.controller.ErrorResponse
+import com.loyaltyone.myweb.controller.UserEmptyException
 import com.loyaltyone.myweb.controller.UserNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -17,7 +18,14 @@ class ErrorHandler {
     @ExceptionHandler(UserNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    fun handleHttpAccountNotFoundException(error: UserNotFoundException): ErrorResponse {
+    fun handleUserNotFoundException(error: UserNotFoundException): ErrorResponse {
+        return ErrorResponse(error.code, error.message)
+    }
+
+    @ExceptionHandler(UserEmptyException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleUserEmptyException(error: UserEmptyException): ErrorResponse {
         return ErrorResponse(error.code, error.message)
     }
 
