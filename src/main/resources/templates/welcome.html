@@ -25,7 +25,7 @@
                 $.ajax({
                     type : "POST",
                     contentType : 'application/json',
-                    url : "http://localhost:8080/users" ,
+                    url : "https://localhost:8443/users" ,
                     dataType : 'json',
                     data : JSON.stringify(formData),
                     success: function(result){
@@ -78,7 +78,7 @@
             $.ajax({
                 type : "GET",
                 contentType : 'application/json',
-                url : "http://localhost:8080/" + userName ,
+                url : "https://localhost:8443/" + userName ,
                 success: function(result){
                     $("#divResultGet").text("The user has entered all these data: " + JSON.stringify(result));
                 },
@@ -99,6 +99,7 @@
 </script>
 </head>
 <body>
+<!--
 <div class="container-fluid">
 
     <div class="row">
@@ -191,7 +192,7 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </fieldset>
             </form>
-
+-->
 <div class="container-fluid">
 
     <div class="row">

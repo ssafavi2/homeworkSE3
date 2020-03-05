@@ -1,4 +1,4 @@
-package com.loyaltyone.myweb.controller
+package myweb.controller
 
 import myweb.controller.UserController
 import org.junit.Test
