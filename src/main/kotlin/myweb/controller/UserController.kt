@@ -1,8 +1,9 @@
-package com.loyaltyone.myweb.controller
+package myweb.controller
 
 import arrow.core.getOrHandle
-import com.loyaltyone.myweb.model.User
-import com.loyaltyone.myweb.service.UserService
+import myweb.model.User
+import myweb.service.UserService
+import myweb.dto.UserRequest
 import myweb.model.UserErrorCode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -33,7 +34,7 @@ class UserController @Autowired constructor(val userService: UserService) {
 
 
     @PostMapping("/users")
-    fun saveUsers(@RequestBody request: User) : User {
+    fun saveUsers(@RequestBody request: UserRequest) : User {
         return userService.saveUserInfo(request)
     }
 }

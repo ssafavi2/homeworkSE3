@@ -1,4 +1,4 @@
-package myweb.dto.location
+package myweb.dto.weather
 
 data class WeatherRequest(val city:String)
 {
