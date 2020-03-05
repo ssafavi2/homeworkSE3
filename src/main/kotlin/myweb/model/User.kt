@@ -1,32 +1,32 @@
-package com.loyaltyone.myweb.model
+package myweb.model
 
 
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.util.*
 import javax.persistence.*
 
 
 @Entity
 @Table(name = "users")
-class User {
+data class User (
 
-    @get:Id
-    @get:GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long = 0
-    @get:Column(name = "username", nullable = false)
-    lateinit var userName: String
-    @get:Column(name = "metadata", nullable = false)
-    lateinit var metaData: String
-    @get:Column(name = "date_time", nullable = false)
-    var dateTime: LocalDateTime = LocalDateTime.now()
+    @Id @Column(name = "username", nullable = false)
+    val userName: String,
+    @Column(name = "metadata", nullable = false)
+    val metaData: String,
+    @Column(name = "date_time", nullable = false)
+    val dateTime: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "city", nullable = false)
+    val city: String,
+    @Column(name = "longitude", nullable = false)
+    val longitude: String,
+    @Column(name = "latitude", nullable = false)
+    val latitude: String,
+    @Column(name = "temperature", nullable = false)
+    val temperature: String
+
+)
 
 
-    constructor() {
-
-    }
-
-    constructor(userName:String, metaData: String) {
-        this.metaData = metaData
-        this.userName = userName
-
-    }
-}
