@@ -9,16 +9,17 @@ import javax.persistence.*
 
 
 @Entity
-@Table(name = "users")
-data class User (
+@Table(name = "comments")
+data class Comments (
 
-    @Id @Column(name = "id", nullable = false )
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @Column(name = "id", nullable = false)
     val id: Long = 0,
-    @Column(name = "username", nullable = false)
-    val userName: String,
-    @Column(name = "metadata", nullable = false)
-    val metaData: String,
+    @Column(name = "initial_post_id", nullable = false)
+    val initialPostId: Long,
+    @Column(name = "comment_user_name", nullable = false)
+    val commentUserName: String,
+    @Column(name = "comment", nullable = false)
+    val comment: String,
     @Column(name = "date_time", nullable = false)
     val dateTime: LocalDateTime = LocalDateTime.now(),
     @Column(name = "city", nullable = false)
@@ -29,7 +30,7 @@ data class User (
     val latitude: String,
     @Column(name = "temperature", nullable = false)
     val temperature: String
-)
 
+)
 
 

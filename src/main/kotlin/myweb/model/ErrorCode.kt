@@ -1,6 +1,6 @@
 package myweb.model
 
-enum class UserErrorCode {
+enum class ErrorCode {
     UserInfoNotFound,
     UserInfoAlreadyExist,
     UserIsEmpty
