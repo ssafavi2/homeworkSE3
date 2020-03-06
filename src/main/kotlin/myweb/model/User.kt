@@ -2,9 +2,6 @@ package myweb.model
 
 
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import java.util.*
 import javax.persistence.*
 
 
