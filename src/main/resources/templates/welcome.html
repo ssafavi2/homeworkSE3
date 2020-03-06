@@ -1,5 +1,19 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
+    <style>
+        .div1 {
+            width: 70px;
+            height: 30px;
+            border: 1px solid blue;
+        }
+
+        .div2 {
+            width: 300px;
+            height: 100px;
+            padding: 50px;
+            border: 1px solid red;
+        }
+    </style>
     <title>Homework</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,12 +23,14 @@
    <!-- <script src="getRequest.js"></script> -->
 
     <script>
+
         $( document ).ready(function() {
             // GET REQUEST
             $("#firstForm").submit(function (event) {
                 event.preventDefault();
                 ajaxPost();
             });
+
 
             // DO POST
             function ajaxPost(){
@@ -29,7 +45,11 @@
                     dataType : 'json',
                     data : JSON.stringify(formData),
                     success: function(result){
-                        $("#divResult").text("Your have entered: " + JSON.stringify(result));
+                        $("#divResult").text(result.metaData);
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>From: "+result.city+" "+result.longitude+" : "+result.latitude+"</sub></div>");
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>Temperature:  "+result.temperature+"</sub></div>");
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>At:  "+result.dateTime+"</sub></div>");
+
                     },
                     error : function(xhr, errorType, exception) {
                         var responseText;
@@ -56,12 +76,54 @@
                     }
                 });
             }
+
         })
     </script>
 </head>
 
 
 <script>
+
+    function ajaxPostComments(commentId){
+        //var userName =$("#userNameComment").val();
+        var comment = $("#comment"+commentId).val();
+        //var city = $("#commentCity").val();
+        var formData = {initialPostId:commentId,userName:"userName",comment:comment,city:"Toronto"};
+        $.ajax({
+            type : "POST",
+            contentType : 'application/json',
+            url : "https://localhost:8443/comments" ,
+            dataType : 'json',
+            data : JSON.stringify(formData),
+            success: function(result){
+                $("#r"+commentId).append("<div style = 'color:palevioletred;'>" + result.comment+ "</div>");
+            },
+            error : function(xhr, errorType, exception) {
+                var responseText;
+                $("#dialog").html("");
+                try {
+                    responseText = jQuery.parseJSON(xhr.responseText);
+                    $("#dialog").append("<div><b>" + errorType + " " + exception + "</b></div>");
+                    $("#dialog").append("<div><u>Exception</u>:<br /><br />" + responseText.ExceptionType + "</div>");
+                    $("#dialog").append("<div><u>StackTrace</u>:<br /><br />" + responseText.StackTrace + "</div>");
+                    $("#dialog").append("<div><u>Message</u>:<br /><br />" + responseText.Message + "</div>");
+                } catch (e) {
+                    responseText = xhr.responseText;
+                    $("#dialog").html(responseText);
+                }
+                $("#dialog").dialog({
+                    title: "jQuery Exception Details",
+                    width: 700,
+                    buttons: {
+                        Close: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     $( document ).ready(function() {
 
         // GET REQUEST
@@ -78,10 +140,19 @@
             $.ajax({
                 type : "GET",
                 contentType : 'application/json',
-                url : "https://localhost:8443/" + userName ,
+                url : "https://localhost:8443/users/" + userName ,
                 success: function(result){
-                    $("#divResultGet").text("The user has entered all these data: " + JSON.stringify(result));
-                },
+
+                    $("#divResultGet").text("Search results");
+                    for (i = 0; i < result.length ; i++) {
+                        var commentId = result[i].id
+
+
+                        $("#divResultGet").append("<div style='color:blue;' id = 'r"  +commentId+"' >"+result[i].metaData+"</div>");
+                        $("#r"+commentId).append("<br /><div style='color:black;'><sub> "+result[i].userName+ " @ " +result[i].dateTime +"</sub></div><br />");
+                        $("#r"+commentId).append("<div id = 'c" + commentId+"' style='color:black;'><input id = 'comment"+ +commentId +"' name='comment'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Reply</a></div>");
+                        }
+                    },
                 error : function(xhr) {
                     var responseText;
                     $("#divResultGet").html("");
@@ -97,138 +168,37 @@
         }
     })
 </script>
+
+
 </head>
 <body>
-<!--
+
 <div class="container-fluid">
 
     <div class="row">
         <div class="col-sm-4">
 
-            <form>
-                <fieldset>
+                <form id="firstForm">
                     <legend>User</legend>
-                    <div class="form-group row">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleSelect1">Example select</label>
-                        <select class="form-control" id="exampleSelect1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleSelect2">Example multiple select</label>
-                        <select multiple="" class="form-control" id="exampleSelect2">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleTextarea">Example textarea</label>
-                        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFile">File input</label>
-                        <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-                        <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
-                    </div>
-                    <fieldset class="form-group">
-                        <legend>Radio buttons</legend>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-                                Option one is this and that—be sure to include why it's great
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
-                                Option two can be something else and selecting it will deselect option one
-                            </label>
-                        </div>
-                        <div class="form-check disabled">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3" disabled="">
-                                Option three is disabled
-                            </label>
-                        </div>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <legend>Checkboxes</legend>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="" checked="">
-                                Option one is this and that—be sure to include why it's great
-                            </label>
-                        </div>
-                        <div class="form-check disabled">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="" disabled="">
-                                Option two is disabled
-                            </label>
-                        </div>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <legend>Sliders</legend>
-                        <label for="customRange1">Example range</label>
-                        <input type="range" class="custom-range" id="customRange1">
-                    </fieldset>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </fieldset>
-            </form>
--->
-<div class="container-fluid">
-
-    <div class="row">
-        <div class="col-sm-4">
-
-            <form id="firstForm">
-                <fieldset>
-                    <legend>User</legend>
-                    <div class="form-group row">
-                    </div>
-                        <div class="form-group">
                             <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username" placeholder="Enter your username">
-
-                            <div class="form-group">
-                                <label for="data">Info</label>
+                                <label for="data">Comments</label>
                                 <input type="text" class="form-control" id="data" placeholder="Enter a text"/>
                             </div>
-
-                                <div class="form-group">
-                                    <label for="city">City</label>
-                                    <input type="text" class="form-control" id="city" placeholder="Enter your city"/>
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <label for="username" class="col-sm-2 col-form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter your username">
                                 </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <div id="divResult"></div>
-                            </div>
-                        </div>
-                </fieldset>
+                                <div class="col-sm-10">
+                                        <label for="city" class="col-sm-2 col-form-label">City</label>
+                                        <input type="text" class="form-control" id="city" placeholder="Enter your city"/>
+                                </div>
+                             </div>
 
-            </form>
-            <form id="secondForm">
-                <fieldset>
-                    <legend>User Search</legend>
-                    <div class="form-group row">
-                    </div>
+                        <button type="submit" class="btn btn-primary">Done</button>
+                        <div id="divResult"></div>
+               </form>
+                <form id="secondForm">
                     <div class="form-group">
                         <div class="form-group">
                             <label for="user">User</label>
@@ -239,12 +209,11 @@
                             <div id="divResultGet"></div>
                         </div>
                     </div>
-                </fieldset>
 
-            </form>
-            </div>
+             </form>
         </div>
     </div>
+
 </div>
 </body>
 </html>

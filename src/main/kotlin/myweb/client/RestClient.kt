@@ -20,9 +20,6 @@ class RestClient @Autowired constructor(val restTemplate: RestTemplate) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    val API: String = "8118ed6ee68db2debfaaa5a44c832918"
-
-
     @Throws(HttpClientErrorException::class)
     @Retryable(include = [Exception::class], exclude = [HttpClientErrorException::class],
             maxAttemptsExpression = "\${weather.retry.attempts}",
@@ -32,7 +29,7 @@ class RestClient @Autowired constructor(val restTemplate: RestTemplate) {
 
 
 
-        var weatherUri: String = "https://samples.openweathermap.org/data/2.5/weather?q=$city&appid=b6907d289e10d714a6e88b30761fae22"
+        var weatherUri= "https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=10ee74f194eb0f57190a4f7759fc8323"
 
 
         val uri = UriComponentsBuilder.fromHttpUrl(weatherUri).build().toUri()

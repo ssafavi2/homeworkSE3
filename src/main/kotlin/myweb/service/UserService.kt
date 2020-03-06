@@ -3,11 +3,13 @@ package myweb.service
 import myweb.model.User
 import arrow.core.Either
 import myweb.client.RestClient
+import myweb.dto.Posts
 import myweb.repository.UserRepository
 import myweb.dto.UserRequest
 import myweb.dto.weather.WeatherResponse
 import myweb.model.Error
-import myweb.model.UserErrorCode
+import myweb.model.ErrorCode
+import myweb.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -20,22 +22,22 @@ interface UserService {
     fun saveUserInfo(userRequest: UserRequest): User
 }
 
-data class UserError(override val code: UserErrorCode, override val message: String) : Error
+data class UserError(override val code: ErrorCode, override val message: String) : Error
 
 
 @Service
-class UserServiceImpl @Autowired constructor(val repository: UserRepository, val restClient: RestClient): UserService {
+class UserServiceImpl @Autowired constructor(val repository: UserRepository,val commentsRepository: CommentRepository, val restClient: RestClient): UserService {
 
     override fun find(user: String): Either<UserError, List<User>> {
         val userData = repository.findByUserName(user)
 
         if (user.isNullOrBlank()) {
-            Either.left(UserError(UserErrorCode.UserIsEmpty, "User is empty, please enter a valid user"))
+            Either.left(UserError(ErrorCode.UserIsEmpty, "User is empty, please enter a valid user"))
         }
         return if (userData.isPresent) {
             Either.right(userData.get())
         } else
-            Either.left(UserError(UserErrorCode.UserInfoNotFound, "No user data is found"))
+            Either.left(UserError(ErrorCode.UserInfoNotFound, "No user data is found"))
     }
 
     override fun saveUserInfo(userRequest: UserRequest): User {
