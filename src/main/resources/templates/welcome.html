@@ -45,9 +45,10 @@
                     dataType : 'json',
                     data : JSON.stringify(formData),
                     success: function(result){
-                        var commentId = result.id;
-                        console.log(commentId);
-                        $("#divResult").text(JSON.stringify(result));
+                        $("#divResult").text(result.metaData);
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>From: "+result.city+" "+result.longitude+" : "+result.latitude+"</sub></div>");
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>Temperature:  "+result.temperature+"</sub></div>");
+                        $("#divResult").append("<br /><div style='color:deepskyblue;' ><sub>At:  "+result.dateTime+"</sub></div>");
 
                     },
                     error : function(xhr, errorType, exception) {
@@ -85,7 +86,7 @@
 
     function ajaxPostComments(commentId){
         //var userName =$("#userNameComment").val();
-        var comment = $("#comment").val();
+        var comment = $("#comment"+commentId).val();
         //var city = $("#commentCity").val();
         var formData = {initialPostId:commentId,userName:"userName",comment:comment,city:"Toronto"};
         $.ajax({
@@ -148,8 +149,8 @@
 
 
                         $("#divResultGet").append("<div style='color:blue;' id = 'r"  +commentId+"' >"+result[i].metaData+"</div>");
-                        $("#r"+commentId).append("<br /><div style='color:black;'><sub>: "+result[i].userName+ " @ " +result[i].dateTime +"</sub></div><br />");
-                        $("#r"+commentId).append("<div id = 'c" + commentId+"' style='color:black;'><input id = 'comment' name='comment'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Reply</a></div>");
+                        $("#r"+commentId).append("<br /><div style='color:black;'><sub> "+result[i].userName+ " @ " +result[i].dateTime +"</sub></div><br />");
+                        $("#r"+commentId).append("<div id = 'c" + commentId+"' style='color:black;'><input id = 'comment"+ +commentId +"' name='comment'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Reply</a></div>");
                         }
                     },
                 error : function(xhr) {
