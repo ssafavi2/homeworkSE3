@@ -23,12 +23,14 @@
    <!-- <script src="getRequest.js"></script> -->
 
     <script>
+
         $( document ).ready(function() {
             // GET REQUEST
             $("#firstForm").submit(function (event) {
                 event.preventDefault();
                 ajaxPost();
             });
+
 
             // DO POST
             function ajaxPost(){
@@ -43,7 +45,10 @@
                     dataType : 'json',
                     data : JSON.stringify(formData),
                     success: function(result){
-                        $("#divResult").text("Your have entered: " + JSON.stringify(result));
+                        var commentId = result.id;
+                        console.log(commentId);
+                        $("#divResult").text(JSON.stringify(result));
+
                     },
                     error : function(xhr, errorType, exception) {
                         var responseText;
@@ -70,12 +75,54 @@
                     }
                 });
             }
+
         })
     </script>
 </head>
 
 
 <script>
+
+    function ajaxPostComments(commentId){
+        var userName =$("#userNameComment").val();
+        var comment = $("#comment").val();
+        var city = $("#commentCity").val();
+        var formData = {initialPostId:commentId,userName:userName,comment:comment,city:city};
+        $.ajax({
+            type : "POST",
+            contentType : 'application/json',
+            url : "https://localhost:8443/comments" ,
+            dataType : 'json',
+            data : JSON.stringify(formData),
+            success: function(result){
+                $("#divResultGet").append("<div><i>Comments</i>:<br /><br />" + JSON.stringify(result) + "</div>");
+            },
+            error : function(xhr, errorType, exception) {
+                var responseText;
+                $("#dialog").html("");
+                try {
+                    responseText = jQuery.parseJSON(xhr.responseText);
+                    $("#dialog").append("<div><b>" + errorType + " " + exception + "</b></div>");
+                    $("#dialog").append("<div><u>Exception</u>:<br /><br />" + responseText.ExceptionType + "</div>");
+                    $("#dialog").append("<div><u>StackTrace</u>:<br /><br />" + responseText.StackTrace + "</div>");
+                    $("#dialog").append("<div><u>Message</u>:<br /><br />" + responseText.Message + "</div>");
+                } catch (e) {
+                    responseText = xhr.responseText;
+                    $("#dialog").html(responseText);
+                }
+                $("#dialog").dialog({
+                    title: "jQuery Exception Details",
+                    width: 700,
+                    buttons: {
+                        Close: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     $( document ).ready(function() {
 
         // GET REQUEST
@@ -94,8 +141,16 @@
                 contentType : 'application/json',
                 url : "https://localhost:8443/users/" + userName ,
                 success: function(result){
-                    $("#divResultGet").text("The user has entered all these data: " + JSON.stringify(result));
-                },
+
+                    $("#divResultGet").text("Search results");
+                    for (i = 0; i < result.length ; i++) {
+                        var commentId = result[i].id
+
+
+                        $("#divResultGet").append("<div id = "  +i+" >JSON.stringify(result[i])</div>");
+                        $("#i").append("<div> User Name <input  id = 'userNameComment' name='userNameComment'> Comment <input id = 'comment' name='comment'> City <input id = 'commentCity' name='commentCity'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Comment</a></div>");
+                        }
+                    },
                 error : function(xhr) {
                     var responseText;
                     $("#divResultGet").html("");
@@ -112,60 +167,6 @@
     })
 </script>
 
-<script>
-    $( document ).ready(function() {
-
-        // GET REQUEST
-        $("#commentsForm").submit(function(event){
-            event.preventDefault();
-            ajaxPost();
-        });
-
-
-
-        // DO POST
-        function ajaxPost(){
-            var initialPostId =$("#initialPost").val();
-            var userName =$("#commentUserName").val();
-            var comment = $("#comment").val();
-            var city = $("#cityComment").val();
-            var formData = {initialPostId:initialPostId,userName:userName,comment:comment,city:city};
-            $.ajax({
-                type : "POST",
-                contentType : 'application/json',
-                url : "https://localhost:8443/comments" ,
-                dataType : 'json',
-                data : JSON.stringify(formData),
-                success: function(result){
-                    $("#divResult").text("Your have entered: " + JSON.stringify(result));
-                },
-                error : function(xhr, errorType, exception) {
-                    var responseText;
-                    $("#dialog").html("");
-                    try {
-                        responseText = jQuery.parseJSON(xhr.responseText);
-                        $("#dialog").append("<div><b>" + errorType + " " + exception + "</b></div>");
-                        $("#dialog").append("<div><u>Exception</u>:<br /><br />" + responseText.ExceptionType + "</div>");
-                        $("#dialog").append("<div><u>StackTrace</u>:<br /><br />" + responseText.StackTrace + "</div>");
-                        $("#dialog").append("<div><u>Message</u>:<br /><br />" + responseText.Message + "</div>");
-                    } catch (e) {
-                        responseText = xhr.responseText;
-                        $("#dialog").html(responseText);
-                    }
-                    $("#dialog").dialog({
-                        title: "jQuery Exception Details",
-                        width: 700,
-                        buttons: {
-                            Close: function () {
-                                $(this).dialog('close');
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    })
-</script>
 
 </head>
 <body>
@@ -176,7 +177,7 @@
         <div class="col-sm-4">
 
             <form>
-                <fieldset>
+                <fieldset>x`
                     <legend>User</legend>
                     <div class="form-group row">
                     </div>
@@ -288,34 +289,6 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <div id="divResult"></div>
                </form>
-                <form id="commentsForm">
-                    <fieldset>
-                        <legend>Comments</legend>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label for="initialPost">InitialPost</label>
-                                <input type="text" class="form-control" id="initialPost" placeholder="Enter the id to leave comment">
-
-                                <div class="form-group">
-                                    <label for="commentUserName">CommentUserName</label>
-                                    <input type="text" class="form-control" id="commentUserName" placeholder="Enter the username to comment">
-
-                                    <div class="form-group">
-                                    <label for="comment">Info</label>
-                                    <input type="text" class="form-control" id="comment" placeholder="Enter a text"/>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="cityComment">CommentCity</label>
-                                    <input type="text" class="form-control" id="cityComment" placeholder="Enter your city"/>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Comments</button>
-                                <div id="divResultComment"></div>
-                            </div>
-                        </div>
-                        </div>
-                    </fieldset>
-            </form>
                 <form id="secondForm">
                     <div class="form-group">
                         <div class="form-group">

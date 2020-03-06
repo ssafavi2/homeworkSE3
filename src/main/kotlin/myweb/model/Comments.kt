@@ -13,6 +13,7 @@ import javax.persistence.*
 data class Comments (
 
     @Id @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
     @Column(name = "initial_post_id", nullable = false)
     val initialPostId: Long,
