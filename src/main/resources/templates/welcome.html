@@ -95,7 +95,7 @@
             dataType : 'json',
             data : JSON.stringify(formData),
             success: function(result){
-                $("#divResultGet").append("<div><i>Comments</i>:<br /><br />" + JSON.stringify(result) + "</div>");
+                $("#r"+commentId).append("<div><i>Comments</i>:<br /><br />" + JSON.stringify(result) + "</div>");
             },
             error : function(xhr, errorType, exception) {
                 var responseText;
@@ -147,8 +147,8 @@
                         var commentId = result[i].id
 
 
-                        $("#divResultGet").append("<div id = "  +i+" >JSON.stringify(result[i])</div>");
-                        $("#i").append("<div> User Name <input  id = 'userNameComment' name='userNameComment'> Comment <input id = 'comment' name='comment'> City <input id = 'commentCity' name='commentCity'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Comment</a></div>");
+                        $("#divResultGet").append("<div id = 'r"  +commentId+"' >"+JSON.stringify(result[i])+"</div>");
+                        $("#r"+commentId).append("<div id = 'c" + commentId+"'> User Name <input  id = 'userNameComment' name='userNameComment'> Comment <input id = 'comment' name='comment'> City <input id = 'commentCity' name='commentCity'><a onclick='javascript:ajaxPostComments(" + commentId + ");'>Comment</a></div>");
                         }
                     },
                 error : function(xhr) {
